@@ -1,0 +1,68 @@
+Waiting for installation to finish...
+
+1.) 
+ - ls befindet sich:
+ - sonstige Verwendungszwecke:
+  - finden der binär, quell und anleitungs dateien für befehle
+ - man zeigt da manual/anleitung zu dingen an
+2.)
+ - ursprünglich in der datei /etc/passwd dort steht an stelle des passworts ein x 
+   das tatsächliche passwort findet sich in der sogenenten /etc/shadow file 
+ - 
+3.) 
+ - in der /etc/passwd steht welche uid welchem nutzernamen zugeordnet ist
+4.)
+ - uid
+5.) 
+ - whoami
+6.)
+ - /etc/passwd aufbau: 
+   - einträge durch \n getrennt, parameter der einträge durch :
+   - Einträge: 
+     - Username
+     - Password bzw. x
+     - uid
+     - gid
+     - Anzeigename
+     - home-verzeichniss
+     - shell
+ - nobody uid: 65534
+ - nein, da an stelle des passwort hashes in der shado file *, steht siehe man page
+ - nobody shell: /usr/sbin/nologin
+7.)
+ - added user test to sudo group
+8.)
+ - ls -la
+9.)
+ - "-rwsr-xr-x 1 root root ..."
+   - jeder darf die datei ausführen
+   - die datei gehört zum nutzer root dieser darf     lesen und shreiben
+   - die datei gehört zur gruppe root diese  darf lesen
+   - sonstige nutzer dürfen die datei             lesen 
+   - das anstelle des x für die ausfürung besagt das diese datei,
+     wenn ausgeführ, mit den rechten zugehörigen nutzers ausgeführt wird.
+     Dies ergibt sinn da diese Programm zur änderung von passwörtern benutzt wird 
+     die datei welche diese enthalten aber nur vom nutzer root geändert werden kann
+10.)
+ - "drwxrwxrwxt 11 root root ..."
+   - the initial d indicates a directory
+   - the leading t indicates the ristricted deletion bit being set
+     - this protects files and folders from being deleted/renamed by users are neither
+       - the owner 
+       - privileged
+     - as everyone can read/write to /tmp otherwise everyone could 
+       delete/rename every containd file/folder
+11.)
+ - touch update access and modification timed of each file to the current time
+ - mkdir create file -p to also create parents
+ - rm removes files -f force , -r recursive, -d also rm empty dirs
+ - rmdir remove empty directories -p also remove parents e.g a/b also removes a
+ - cp copies from a to b -l hardlink, -s symlink, -r recursive
+12.)
+ - mkdir It-Sec/Vorversuch/12
+ - touch test.txt
+13.)
+ - cp -r It-Sec/ It-Test
+14.) 
+ - rm -r It-Sec/
+ 

