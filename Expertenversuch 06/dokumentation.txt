@@ -99,7 +99,9 @@ case ARG_ROOT_PLS:
 
 #setup files (can be found in the step3 folder)
 #Create Makefile (no quotes around kroot.o)
-#Create kroot.c 
+#Create kroot.c
+#now compile and load the module 
+#don't forget to unload first if you are making changes to the module
 
 #compile (compile.sh)
     make -C /lib/modules/$(uname -r)/build M=$PWD modules
@@ -113,6 +115,6 @@ case ARG_ROOT_PLS:
 #Show Messages (add -w to display messages as they come in) (show.sh uses -w flag)
     dmesg -k
 
-#To Recompile and (re)load the module you can use the replace.sh script
+#To Recompile and (re)load the module you can use the replace.sh script (this needs the load,unload and compile script)
 
 
