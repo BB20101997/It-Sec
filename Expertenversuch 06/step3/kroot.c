@@ -72,11 +72,14 @@ asmlinkage void log_open(long fd){
 	//check for valid file discriptor, open may have failed
 	if(fd>=0){
 		struct file *file = fcheck(fd);
-		char path[4097] = {};
+		char buf[256] = {};
 		if(file){
-			char* ret = d_path(&file->f_path,path,4096);
-			if(strcmp(ret,"/tmp/test.txt")==0){
+			char* ret = d_path(&file->f_path,buf,255);
+			if(!IS_ERR(ret)&&strcmp(ret,"/tmp/test.txt")==0){
 				printk(KERN_ALERT "File Opend! %s\n", ret);	
+			}else{
+				//buffer not large enought for path
+				//will not be the file we search for anyways
 			}
 		}		
 
@@ -112,7 +115,8 @@ static int __init minit (void)
 	unsigned long **sct_open;
 	unsigned long **sct_openat;
 
-	
+	//we should may be consider to fail init if sct is NULL, 
+	//we do nothing if it is so its's not harmfull if not to fail
 	if(sct != NULL){
 
 		//print syscall table
@@ -155,8 +159,10 @@ static void mexit (void)
 	unsigned long **sct = aquire_sys_call_table();
 	unsigned long **sct_open;
 	unsigned long **sct_openat; 
-
-	if(sct != NULL && fopen != NULL){
+	
+	//we should probably do something if we found the sct in init
+	//can we even fail exit? don't know how we could recover in that case
+	if(sct != NULL){
 
 		// point to the address of the open syscall
 		sct_open = sct+__NR_open;
@@ -170,8 +176,10 @@ static void mexit (void)
 		disable_page_protection();
 
 		//exchange our wrapper syscall with the original	
-		xchg((long*)sct_open,(long)fopen);
-		xchg((long*)sct_openat,(long)fopenat);
+		if(fopen!=NULL)
+			xchg((long*)sct_open,(long)fopen);
+		if(fopenat!=NULL)
+			xchg((long*)sct_openat,(long)fopenat);
 
 		enable_page_protection();
 
