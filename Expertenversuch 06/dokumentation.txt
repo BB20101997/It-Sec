@@ -73,20 +73,22 @@ case ARG_ROOT_PLS:
 #install headers
     sudo apt-get install linux-headers-$(uname -r)
 
-#setup files
+#setup files (can be found in the step3 folder)
 #Create Makefile (no quotes around kroot.o)
-#Create kroot.c
+#Create kroot.c 
 
-#compile
+#compile (compile.sh)
     make -C /lib/modules/$(uname -r)/build M=$PWD modules
 
-#load
+#load (load.sh)
     insmod kroot.ko
 
-#unload
+#unload (unload.sh)
     rmmod kroot.ko
 
-#Show Messeges (add -w to display messages as they come in)
+#Show Messeges (add -w to display messages as they come in) (show.sh uses -w flag)
     dmesg -k
 
-#Why does it look line the sys_call_table entry is replaced successfully but it does not work?
+#To Recompile and (re)load the module you can use the replace.sh skript
+
+
