@@ -15,12 +15,13 @@
     set mouse=a
 #Make VM Snapshot
 
-#Downgrade Kernel via script
-#Reboot/Start with lower Kernel [Press ESC for selection]
-#Install grub customizer and update default kernel
+#Downgrade Kernel via script (step0 folder)
+#Install grub customizer and change default kernel
     sudo add-apt-repository ppa:danielrichter2007/grub-customizer
     sudo apt-get update
     sudo apt-get install grub-customizer
+#Reboot
+    sudo reboot now
 #Make VM Snapshot
 
 #################################
