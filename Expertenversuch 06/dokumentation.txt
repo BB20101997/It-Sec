@@ -1,7 +1,11 @@
 # Step 0 Prepare Kernel/VM
-
+#Make VM Snapshot
 #Downgrade Kernel via script
 #Reboot/Start with lower Kernel [Press ESC for selection]
+#Install grub customizer and update default kernel
+    sudo add-apt-repository ppa:danielrichter2007/grub-customizer
+    sudo apt-get update
+    sudo apt-get install grub-customizer
 #Gasterweiterung installieren 
     sudo apt-get install virtualbox-guest-addition-iso
 #Install vim
@@ -19,7 +23,7 @@
 #Scan (Interactive): 
     sudo rkhunter -c
 #Copy log from /var/log/rkhunter.log to some safe place 
-    cp /var/log/rkhunter.log ~/step1.log
+    cp /var/log/rkhunter.log ~/Documents/step1.log
 
 # Step 2 Build/Install Rootkit
 
