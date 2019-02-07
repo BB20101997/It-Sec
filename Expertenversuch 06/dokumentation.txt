@@ -28,9 +28,9 @@
 # Setp 1 Install and Run rkhunter
 #################################
 
-#Install RootkitHunter (rkhunter) with Local Mail
+#Install RootkitHunter (rkhunter) with Local Only  for Mail option
     sudo apt-get install rkhunter
-#Update rkhunter DB (might fail due to invalid WEB_CMD):
+#Update rkhunter DB (might fail due to invalid WEB_CMD in that case skip this):
     sudo rkhunter --update
 #Scan (Interactive): 
     sudo rkhunter -c
@@ -115,7 +115,7 @@
 #############################
 
 #switch to a new/empty directory
-    mkdir -p ~/Documents/Rootkit && cd ~Documents/Rootkit
+    mkdir -p ~/Documents/Rootkit && cd ~/Documents/Rootkit
 
 #install headers
     sudo apt-get install linux-headers-$(uname -r)
@@ -123,19 +123,21 @@
 #setup files (can be found in the step3 folder)
 #Create Makefile (no quotes around kroot.o)
 #Create kroot.c
-#now compile and load the module 
+#now compile and load the module
 #don't forget to unload first if you are making changes to the module
 
 #compile (compile.sh)
     make -C /lib/modules/$(uname -r)/build M=$PWD modules
 
 #load (load.sh)
-    insmod kroot.ko
+    sudo insmod kroot.ko
 
 #unload (unload.sh)
-    rmmod kroot.ko
+    sudo rmmod kroot.ko
 
 #Show Messages (add -w to display messages as they come in) (show.sh uses -w flag)
-    dmesg -k
+    sudo dmesg -k
 
 #To Recompile and (re)load the module you can use the replace.sh script (this needs the load,unload and compile script)
+
+#if on the first try the module does not work reboot and try again
