@@ -1,8 +1,13 @@
-##########################
-# Step 0 Prepare VM/Kernel
-##########################
+#########################################
+# Gruppe: Bennet Bleßmann & Malte Clement
+#########################################
 
-#Install OS into VM
+##################################
+# Step 0 Prepare VM/Kernel
+# (exept vim setup skip on CAU VM)
+##################################
+
+#Install OS into VM 
 #Make VM Snapshot
 
 #Gasterweiterung installieren 
@@ -20,6 +25,7 @@
     sudo add-apt-repository ppa:danielrichter2007/grub-customizer
     sudo apt-get update
     sudo apt-get install grub-customizer
+#Run gub-customizer and change default kernel
 #Reboot
     sudo reboot now
 #Make VM Snapshot
@@ -124,6 +130,8 @@
 #Create Makefile (no quotes around kroot.o)
 #Create kroot.c
 #now compile and load the module
+#open /tmp/test.txt (as this is the file the module is looking for), save and look at the logs     
+#saving might be necessary if the file didn't exist prior as some editors (e.g. vim) don't create/open non existing files until the first save 
 #don't forget to unload first if you are making changes to the module
 
 #compile (compile.sh)
@@ -132,7 +140,7 @@
 #load (load.sh)
     sudo insmod kroot.ko
 
-#unload (unload.sh)
+#unload (unload.sh), for some reason crashes some VMs the first time 
     sudo rmmod kroot.ko
 
 #Show Messages (add -w to display messages as they come in) (show.sh uses -w flag)
@@ -140,4 +148,6 @@
 
 #To Recompile and (re)load the module you can use the replace.sh script (this needs the load,unload and compile script)
 
-#if on the first try the module does not work reboot and try again
+# if on the first try the module does not work reboot and try again,
+# reboot might be necessary to make sure nothing remains of the unloaded modules,
+# especially if the unloading of the module has an error
