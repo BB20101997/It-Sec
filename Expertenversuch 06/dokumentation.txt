@@ -151,3 +151,27 @@
 # if on the first try the module does not work reboot and try again,
 # reboot might be necessary to make sure nothing remains of the unloaded modules,
 # especially if the unloading of the module has an error
+
+
+##########################
+# Antworten auf die Fragen
+##########################
+
+1. Wodurch können Rootkits noch auffallen und wie kann jemand, der diese Programmiert das verhindern.
+
+Im Program kommt der Pfad: /bin/bash/ im Klartext vor. 
+
+Das könnte man durch Berechnungen verschleiern und somit das Rootkit schwerer auffindbar machen.
+
+2. Gibt es Möglichkeiten Rootkits quasi vollständig unbemerkbar zu machen?
+
+Ja, wenn man das Rootkit zum Beispiel in der Firmware versteckt oder im Microcode des Prozessors.
+Ein manipuliertes Betriebssystem könnte auch ein Rootkit verbergen.
+
+3. Gibt es einen wirksamen Schutz gegen Rootkits?
+
+Ja man hat mehrere Möglichkeiten.
+Im allgemeinen sollte man nie das Administratorkonto aktiv benutzen.
+Dann sollte man prüfen, wer Zugang zum Computer hat.
+Nur Dateien aus sicheren Quellen ausführen. Keine Spam Mails etc. 
+Ein physikalischen Schreibschutz auf der Hardware einbauen. 
