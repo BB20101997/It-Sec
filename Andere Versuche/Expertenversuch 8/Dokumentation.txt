@@ -115,6 +115,9 @@ remove the fields length limit by editing the pages html to get around the usern
 Set User Icon to
 https://google-gruyere.appspot.com/{your id}/deletesnippet?index=0
 
+Create new post
+/505335553014014035553643000334122431558/newsnippet2?submit=Submit&snippet=Haha
+
 everytime someone opens a page with your user icon they delete their newest (remaining) snippet
 
 # XSSI
