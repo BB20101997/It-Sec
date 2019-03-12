@@ -151,6 +151,9 @@ then upload secert.txt
 Apparently 
 Username Somthing/../.. or .. should work (hints/solution) doesn't look like it does 
 
+The following worked
+https://google-gruyere.appspot.com/505335553014014035553643000334122431558%2f../secret.txt
+
 # DoS
 #####
 
