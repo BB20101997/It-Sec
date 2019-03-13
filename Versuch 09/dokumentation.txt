@@ -43,3 +43,40 @@ Cons:
 ##############
 ### Teil 3 ###
 ##############
+
+unlock development mode
+enable USB-Debugging
+connect Phone to PC 
+run adb devices to start daemon
+allow PC access to the Phone (there should be a request)
+run adb devices again you should now see the device
+
+#remember push and pull you will need them
+
+### Versuch A
+
+# in the following command apk needs to be replaced 
+# with the path to the apk that shall be installed
+run adb install "apk"
+
+HTTPS wird genutzt # url protokoll https and port 443 
+Certificat Pinning wird nicht genutzt da sonst der Proxy nicht funktionieren sollte
+
+Zur Autfizierung des Nutzernamens erhält man beim login ein Token
+
+#################
+### Versuch B ###
+#################
+
+### Unpin aktive
+
+Sieht aus wie ohne Certificat Pinning
+
+### Unpin inaktive
+
+App beschwert sich über falsches Zertifikat (das des Proxy statt des erwarteten des Servers)
+
+### Versuch C
+
+### Versuch D
+
