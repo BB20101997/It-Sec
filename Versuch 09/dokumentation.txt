@@ -1,0 +1,45 @@
+##############
+### Teil 1 ###
+##############
+
+Get Wifi-Stick and University Laptop (we had Notebook 80)
+Insert Stick into Notebook
+Create or use existing Wifi-Hotspot
+Connect Phone to Wifi-Hotspot
+Start mitmproxy
+Setup Proxy for Wifi-Hotspot on Phonie
+Navigate to mitm.it and download the certificate
+
+##############
+### Teil 2 ###
+##############
+
+### Mitschnitt
+Ja geht
+### Ablauf
+
+Alice			 			Bob  Keys
+	    Client Connection established  ->        Open
+	<-   Server Connection Initiated             Open
+	<- Server Connection TCP Handshake           Open
+	<- Server Connection SSL Handshake           Private Cert Key
+           Client Connection SSL Handshake ->        Public  Cert Key
+                     Send Request          ->        Symmetric Session Key
+	<-           Send Response                   Symmetric Session Key
+
+### Cert Pins for Webpages
+
+Pro:
+ - Rough CA's can cause less problem
+ -
+ - 
+
+Cons:
+ - maliciouse actors might use HPKP-Pins to request ransom form targets or otherwise cause
+  users accessing the site to get errors
+ - deprecated in Chrome since Chrome 67  
+ -  
+
+##############
+### Teil 3 ###
+##############
