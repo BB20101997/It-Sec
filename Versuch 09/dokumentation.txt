@@ -78,5 +78,33 @@ App beschwert sich über falsches Zertifikat (das des Proxy statt des erwarteten
 
 ### Versuch C
 
+use adb shell to get a shell on the phone
+use su and accept on device to get elevated (root) privileges
+find libnative.so (/data/app/itsec.chat-1/lib/arm/libnative.so)
+use adb pull on the computer to download libnative.so
+create ghidra project and import libnative.so, for the import turn off symbol relocation
+open libnative.so and analyse it
+
+find ssl_app_verify_callback and patch it to circumvent certificat pinning
+
+patch ssl_app_verify_callback at possition 0006adc2
+change using the destination address to 0006add2
+thic can be done by changing bytes 0x0005adc2 and 0x0005adc3 to 06 and e0
+
+replace lib on device
+copy lib to device
+adb push libnativ.so /sdcard/libnative.so
+
+connect via shell to device and elevate to root
+adb shell 
+su
+
+move lib to the correct location
+mv /sdcard/libnative.so /data/app/itsec.chat-1/lib/arm/libnative.so
+
+fix acces rights 
+chown root:root libnative.so
+chmod 0777 libnative
+ 
 ### Versuch D
 
