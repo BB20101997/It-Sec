@@ -108,3 +108,5 @@ chmod 0777 libnative
  
 ### Versuch D
 
+run TeilD.sh
+
