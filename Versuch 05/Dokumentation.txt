@@ -1,0 +1,117 @@
+#################
+# Vorbereitung 1
+#################
+
+1. Zertifikate Authentifizieren Keys
+
+2. Self-Signed, Public und Internal CAs
+
+3. Den im Trust Store befindlichen Zertifikate wird vertraut, sie bilden die Vertrauens grundlage.
+Allen Zertifikaten welche von vertrauenswürdigen Zertifikaten, Zertifiziert wurden wird vertraut,
+sofern diese Zertifizieren durften und keins der beiden auf einer CRL steht.
+
+4. ASN.1 distinguished encoding rules (DER) [X.690]
+
+5.  critical: something marked critical needs to be recognised and processed, if it cannot the validation needs to fail
+    basic constraint: extension to used to specifies a certified key may act as an ca and the maximum length of the certificate-chain signed by it including itself
+
+#############
+# Stichwörter
+#############
+
+# Certification Authority (CA): Verisign, GoDaddy, Let’s Encrypt, CAcert, …
+Vertrauenswürdige CAs z.t. Kommerziell, nutze Let's Encrypt für meinen Webserver
+
+Public Key Infrastrukturen
+2 Key Verschlüsselungs Infrastruktur, Private Key nicht öffentlich 
+z.b. zum signieren und entschlüsseln von Dokumenten
+, Public Key öffentlicher Schlüssel z.b. zum verifizieren von Signaturen und verschlüsseln von Dokumenten.
+CA zum authentifizieren von Public Keys, RAs optional zum verifizieren für CAs, optional Recovery Agents mit z.B. M of N verfahren,
+Key Escrow für polizeilichen zugriff auf Schlüssel (würde ich nicht empfehlen) 
+
+Asymmetrische Verschlüsselung
+Unteschidelischer Schlüssel fürs ver- und entschlüsseln
+
+Bindungsproblem
+?TODO?
+
+Digitales Zertifikat
+?TODO?
+
+Trustmodelle: Single CA, Hierarchical, Bridge, Hybrid, Web Of Trust
+Single CA: Eine CA stellt alle Zertifikate aus
+Hirachical: Eine Hirachie an CAs mit Intermediate und Leaf CAs
+Bridge: CAs Zertifizieren sich gegenseitig es gibt keinen Root
+Hybrid: Top Level CAs bilden eine Bridge mit Hirachical Struktur drunter
+Web of Trust: Das Resultat ist ein Netz aus vertrauenswürdigen CAs
+
+Zertifikatskette
+Die Liste an Zertifikaten vom direkt vertrauten Zertifikat (Root) über intermediates bis zum Ziel(?) Zertifikat
+(Warum sollten wir Zertifikat Z vertrauen, weil wir A vertrauzen A vertraut B, B vertraut C ,... und Y vertraut Z,
+dann ist A bis Z die Zertifikatskette)
+
+
+Zertifikatsstandards: X509, S/MIME, …
+Internet, Email, sonstige
+
+###########
+# Versuch 1
+###########
+lms.uni-kiel.de:
+T-TeleSec GlobalRoot Class 2
+ - DFN-Verein Certification Authority 2
+   - DFN-Verein Global Issuing CA
+     - lms.uni-kiel.de
+     
+     
+Chrome:
+Einstellungen -> Erweitert -> Zertifikate Verwalten 
+
+Firefox:
+Einstellungen -> Datenschutz & Sicherheit -> In der Sektion Sicherheit unter Zertifikate -> Zertifikate anzeigen
+
+Windows:
+Manage Computer Certificates
+
+Linux:
+TODO
+
+####################################
+# Aufbau einer Zertifikatshierarchie
+####################################
+
+- Installiere uns starte XCA
+- Erstelle eine XCA-Datenbank
+- Erstelle Root CA 
+ - Erstelle 3 sub-CAs 
+    (man kann soweit ich weiß nicht einschränken was eine sub-CA Zertifizieren darf nur, ob sie darf,
+    aber man kann einschränken das sie nichts außer Zertifizieren darf)
+    
+    https://serverfault.com/questions/670725/is-it-possible-to-restrict-the-use-of-a-root-certificate-to-a-domain#670737
+    - it is possible to use the Name Constrained Extension of X.509v3 PKI standard to restrict the domains a sub CA may issue Certs for
+    
+###############
+# Stichwörter 2
+###############
+
+Handshake: Initialization Sequenz to start a new connection or a new connection phase or similar
+
+Kryptografisches Verschlüsselungsprotokoll:
+    - SSL/TLS: Application Layer cryptographic protocol
+    - IPSec : Network Layer cryptographic protocol for IP networks
+        
+Netzwerkprotokolle
+    - HTTPS (default Port 443): HTTP (default port 80) via SSL/TLS 
+    - SSH (default port 22): RSH via SSL/TLS 
+    - LDAP: Lightweight Directory Access Protocol
+        - Port 636 (default) für SSL/TLS verschlüsselte Verbindungen
+        - Port 389 (default) für unverschlüsselte Verbindungen
+
+Sicherer Kanal:
+    - einen Verbindung welche kryptographisch gesichert
+
+    
+###############################
+# Exkurs: Arbeiten mit Diensten
+###############################
+TODO
